@@ -1,5 +1,4 @@
 import time
-start_time = time.time()
 import requests
 from bs4 import BeautifulSoup
 from urllib.request import urlopen as uReq
@@ -32,7 +31,6 @@ while len(containers3) != 0 and len(linkar) < 11761:
         for j in containers3:
             zz = j.find("a", {"class": "fc-item__link"})
             linkar.append(zz.text)
-            print(f"oi! {i}")
         i = i+1
         
         
