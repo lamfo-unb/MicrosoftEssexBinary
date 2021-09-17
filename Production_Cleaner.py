@@ -37,6 +37,65 @@ def train_binary():
         labels.append(lab)
         texts.append(" ".join(content))
 
+    # preprocessing
+    
+    import string
+    #Lowering
+    texts_lower = [t.lower() for t in texts]
+
+    #Tokenizing
+    import re
+    WORD = re.compile(r'\w+')
+
+    texts_tokenized = [WORD.findall(t) for t in texts_lower]
+    """
+    from nltk.tokenize import sent_tokenize
+    texts_sent_toke = [sent_tokenize(t) for t in texts_lower]
+    """
+    #Removing punctuation
+    import re
+    regex = re.compile('[%s]'% re.escape(string.punctuation))
+
+    texts_fully_tokenized = []
+
+    for review in texts_tokenized:
+        new_review = []
+        for token in review:
+            new_token = regex.sub(u'', token)
+            if not new_token == u'':
+                new_review.append(new_token)
+
+        texts_fully_tokenized.append(new_review)
+
+
+    #Removing stopwords
+    from nltk.corpus import stopwords
+
+    tokenized_docs_no_stopwords = []
+
+    #This takes a little
+    for doc in texts_fully_tokenized:
+        new_term_vector = []
+        for word in doc:
+            if not word in stopwords.words('english'):
+                new_term_vector.append(word)
+
+        tokenized_docs_no_stopwords.append(new_term_vector)
+
+    #Ainda não textei aqui embaixo
+    #Stemming and Lemmatization
+    from nltk.stem.wordnet import WordNetLemmatizer
+
+    wordnet = WordNetLemmatizer()
+
+    preprocessed_docs = []
+    for doc in tokenized_docs_no_stopwords:
+        final_doc = []
+        for word in doc:
+            final_doc.append(wordnet.lemmatize(word))
+
+        preprocessed_docs.append(final_doc)
+
     # create a dataframe using texts and lables
     trainDF = pd.DataFrame()
     trainDF['text'] = texts
@@ -120,9 +179,6 @@ def train_binary():
         pickle.dump(count_vect, handle)
 
     
-
-
-
 ###############################################################################################################################
 
 # CLASSIFICATION
@@ -150,6 +206,65 @@ def classify(new_data):
     texts = []
 
     texts.append(new_data)
+
+    # preprocessing
+    
+    import string
+    #Lowering
+    texts_lower = [t.lower() for t in texts]
+
+    #Tokenizing
+    import re
+    WORD = re.compile(r'\w+')
+
+    texts_tokenized = [WORD.findall(t) for t in texts_lower]
+    """
+    from nltk.tokenize import sent_tokenize
+    texts_sent_toke = [sent_tokenize(t) for t in texts_lower]
+    """
+    #Removing punctuation
+    import re
+    regex = re.compile('[%s]'% re.escape(string.punctuation))
+
+    texts_fully_tokenized = []
+
+    for review in texts_tokenized:
+        new_review = []
+        for token in review:
+            new_token = regex.sub(u'', token)
+            if not new_token == u'':
+                new_review.append(new_token)
+
+        texts_fully_tokenized.append(new_review)
+
+
+    #Removing stopwords
+    from nltk.corpus import stopwords
+
+    tokenized_docs_no_stopwords = []
+
+    #This takes a little
+    for doc in texts_fully_tokenized:
+        new_term_vector = []
+        for word in doc:
+            if not word in stopwords.words('english'):
+                new_term_vector.append(word)
+
+        tokenized_docs_no_stopwords.append(new_term_vector)
+
+    #Ainda não textei aqui embaixo
+    #Stemming and Lemmatization
+    from nltk.stem.wordnet import WordNetLemmatizer
+
+    wordnet = WordNetLemmatizer()
+
+    preprocessed_docs = []
+    for doc in tokenized_docs_no_stopwords:
+        final_doc = []
+        for word in doc:
+            final_doc.append(wordnet.lemmatize(word))
+
+        preprocessed_docs.append(final_doc)
 
 
     trainDF2 = pd.DataFrame()
@@ -181,7 +296,7 @@ def classify(new_data):
     #################################################################
 # train_binary()
 # new_data = 'Pfizer vaccine are causing troublesome effects on grannies'
-# new_data = 'Pfizer vaccine saves lifes'
-# result = classify(new_data)
+new_data = 'Pfizer vaccine saves lifes'
+result = classify(new_data)
 # print(int(result))
 # print("--- %s seconds ---" % (time.time() - start_time))
